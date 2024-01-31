@@ -22,7 +22,7 @@ void load_json(char *filename, char **json_data){
 
 int main() {
     // Load the model
-    std::string model_path = "/home/real/Maqsud/onnx_modelzoo/resnet50v2/resnet50v2.onnx";
+    std::string model_path = "resnet50v2/resnet50v2.onnx";
     Ort::Env env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING,"Default");
     Ort::SessionOptions session_options;
 
@@ -91,10 +91,10 @@ int main() {
     // preprocess the input
     std::vector<float> *input_tensor_values = nullptr;
     std::vector<Ort::Value> input_tensor;
-    char *image_name = new char[100];
-    printf("Enter image name: ");
-    scanf("%s",image_name);
-    cv::Mat image = cv::imread(image_name,cv::IMREAD_COLOR);
+    char *image_path = new char[100];
+    printf("Enter image path: ");
+    scanf("%s",image_path);
+    cv::Mat image = cv::imread(image_path,cv::IMREAD_COLOR);
     // this will make the input into 1x3x224x224
     cv::Mat blob = cv::dnn::blobFromImage(image,1/255.0,cv::Size(224,224),cv::Scalar(0,0,0),false,false);
     size_t input_tensor_size = blob.total();
@@ -121,7 +121,7 @@ int main() {
         std::sort(output.rbegin(),output.rend());
 
         char *json_data[1<<10];
-        load_json("/home/real/Maqsud/onnx_modelzoo/imagenet-simple-labels.json",json_data);
+        load_json("imagenet-simple-labels.json",json_data);
         for (int i=0; i<5; ++i){
             printf("%s : %f\n",json_data[output[i].second],output[i].first);
         }

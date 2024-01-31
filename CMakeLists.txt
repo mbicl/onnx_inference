@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.28)
 project(onnx_inference)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)

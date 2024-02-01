@@ -44,7 +44,7 @@ int main() {
 
     // input and output node names
     // set input node names
-    size_t num_input_nodes = 0;
+    size_t num_input_nodes = 0; 
     std::vector<const char*>* input_node_names = nullptr;
     std::vector<std::vector<int64_t>> input_node_dims;
     ONNXTensorElementDataType type;
@@ -103,7 +103,7 @@ int main() {
 
 
     // run inference
-    auto output_tensor = session.Run(Ort::RunOptions{nullptr},input_node_names->data(),input_tensor.data(), input_tensor.size(), output_node_names->data(), 1);
+    auto output_tensor = session.Run(Ort::RunOptions{nullptr},input_node_names->data(),input_tensor.data(), input_tensor.size(), output_node_names->data(), output_node_names->size());
 
     // softmax the output tensor
     if (output_tensor.size()>0){

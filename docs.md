@@ -104,6 +104,6 @@ Runs the model and returns results in vector of `Ort::Value`.
 Type* Ort::Value::Base::GetTensorMutableData<Type>()
 ```
 
-Returns a non-const typed pointer to an OrtValue/Tensor contained buffer. 
+Returns a non-const typed pointer to an OrtValue/Tensor contained buffer.
 No Type checking is performed, the caller must ensure that type matches the OrtValue/Tensor type.
 Returns non-const pointer to data, no copies made.

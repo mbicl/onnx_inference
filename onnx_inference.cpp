@@ -8,6 +8,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <onnxruntime_cxx_api.h>
+#include "utils.hpp"
 
 void load_json(char *filename, char **json_data){
     std::ifstream json_file(filename);
@@ -20,7 +21,11 @@ void load_json(char *filename, char **json_data){
     }
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+    if (argc!=2){
+        std::cout << "Usage: " << argv[0] << " <image_path>\n";
+        return -1;
+    }
     // Load the model
     std::string model_path = "resnet50v2/resnet50v2.onnx";
     Ort::Env env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING,"Default");
@@ -91,10 +96,8 @@ int main() {
     // preprocess the input
     std::vector<float> *input_tensor_values = nullptr;
     std::vector<Ort::Value> input_tensor;
-    char *image_path = new char[100];
-    printf("Enter image path: ");
-    scanf("%s",image_path);
-    cv::Mat image = cv::imread(image_path,cv::IMREAD_COLOR);
+    std::string image_path = argv[1];
+    cv::Mat image = cv::imread(image_path.c_str(),cv::IMREAD_COLOR);
     // this will make the input into 1x3x224x224
     cv::Mat blob = cv::dnn::blobFromImage(image,1/255.0,cv::Size(224,224),cv::Scalar(0,0,0),false,false);
     size_t input_tensor_size = blob.total();
@@ -103,7 +106,10 @@ int main() {
 
 
     // run inference
+    Utils::StopWatch<> timer;
     auto output_tensor = session.Run(Ort::RunOptions{nullptr},input_node_names->data(),input_tensor.data(), input_tensor.size(), output_node_names->data(), output_node_names->size());
+    auto elapsed_time = timer.elapsed<float, std::chrono::milliseconds>();
+    std::cout << "Inference time: " << elapsed_time << " ms\n";
 
     // softmax the output tensor
     if (output_tensor.size()>0){
